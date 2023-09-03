@@ -28,8 +28,8 @@ The library is written in JavaScript and it is compatible with [jQuery](https://
 To use the library, you just need to include the `selectbox-ui.js` file in your Web page. You can download it from the [GitHub repository](https://github.com/dealfonso/selectbox-ui) or get it from the CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/dealfonso/selectbox-ui@1.0/dist/selectbox.min.js"></script>
-<link href="https://cdn.jsdelivr.net/gh/dealfonso/selectbox-ui@1.0/dist/selectbox.min.css>" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/dealfonso/selectbox-ui@1.0/dist/selectbox-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/gh/dealfonso/selectbox-ui@1.0/dist/selectbox-ui.min.css>" rel="stylesheet"/>
 ```
 
 ### Declarative HTML Version

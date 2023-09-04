@@ -26,7 +26,7 @@
 
 let defaultOptions = {
     initialBox: null,
-    wrapperClass: "cb-selectbox-wrapper",
+    wrapperClass: "cb-selectboxui-wrapper",
     wrapperId: null,
     borderWidth: 5,
     addClasses: true,
@@ -374,7 +374,8 @@ function resizeSelectBox(entry) {
     // Update the interface
     el.selectBoxUI.wrapper.style.width = `${width}px`;
     el.selectBoxUI.wrapper.style.height = `${height}px`;
-    el.selectBoxUI.updateInterface();        
+    el.selectBoxUI.updateInterface();
+    el.dispatchEvent(new CustomEvent("selectboxui-resize", {detail: el.selectBoxUI}));
 }
 
 /**
@@ -387,7 +388,7 @@ function selectBoxUI(el, userOptions = {}) {
     if (el.dataset.selectboxuiWrapperClass !== undefined) {
         let classes = el.dataset.selectboxuiWrapperClass.split(" ");
         // Append the default class
-        classes.push("cb-selectbox-wrapper");
+        classes.push(defaultOptions.wrapperClass);
         elOptions.wrapperClass = classes.join(" ");
     } 
 
@@ -744,6 +745,13 @@ function selectBoxUI(el, userOptions = {}) {
                 setBoxFromString(el.selectBoxUI, boxString);
                 correctSelectBoxUISizes(el.selectBoxUI);
                 updateInterface(el.selectBoxUI);
+            },
+            bounce: function() {
+                el.selectBoxUI.wrapper.classList.add("cb-bounce");
+                setTimeout(() => {
+                    el.selectBoxUI.wrapper.classList.remove("cb-bounce");
+                }
+                , 2100);
             }
         };
 
@@ -819,6 +827,9 @@ if ($ !== undefined) {
                             return;
                         }
                         this.selectBoxUI.set(parameters[0]);
+                        break;
+                    case "bounce":
+                        this.selectBoxUI.bounce();
                         break;
                     default:
                         console.error(`Unknown option ${options}`);

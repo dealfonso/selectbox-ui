@@ -35,7 +35,7 @@ SOFTWARE.
     display: none;
 }
 
-.cb-selectbox-wrapper {
+.cb-selectboxui-wrapper {
     overflow: hidden;
 }
 .cb-borders-fixed .cb-border{
@@ -119,3 +119,54 @@ SOFTWARE.
 .cb-focus.cb-resizing ~ .cb-border {
     border-color: #fff;
 }
+.cb-bounce .cb-border {
+    border-color: #fff;
+  }
+  .cb-bounce .cb-border-left {
+    animation: cb-bounce-left 2s infinite;
+    -webkit-animation: cb-bounce-left 2s normal forwards;
+  }
+  @keyframes cb-bounce-left {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateX(0px);
+    }
+    40%, 60% {
+      transform: translateX(10px);
+    }
+  }
+  .cb-bounce .cb-border-right {
+    animation: cb-bounce-right 2s infinite;
+    -webkit-animation: cb-bounce-right 2s normal forwards;
+  }
+  @keyframes cb-bounce-right {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateX(0px);
+    }
+    40%, 60% {
+      transform: translateX(-10px);
+    }
+  }      
+  .cb-bounce .cb-border-top {
+    animation: cb-bounce-top 2s infinite;
+    -webkit-animation: cb-bounce-top 2s normal forwards;
+  }
+  @keyframes cb-bounce-top {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0px);
+    }
+    40%, 60% {
+      transform: translateY(10px);
+    }
+  }
+  .cb-bounce .cb-border-bottom {
+    animation: cb-bounce-bottom 2s infinite;
+    -webkit-animation: cb-bounce-bottom 2s normal forwards;
+  }
+  @keyframes cb-bounce-bottom {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0px);
+    }
+    40%, 60% {
+      transform: translateY(-10px);
+    }
+  }

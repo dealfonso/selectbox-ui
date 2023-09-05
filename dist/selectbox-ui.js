@@ -26,7 +26,7 @@
     "use strict";
     let defaultOptions = {
         initialBox: null,
-        wrapperClass: "cb-selectbox-wrapper",
+        wrapperClass: "sb-selectboxui-wrapper",
         wrapperId: null,
         borderWidth: 5,
         addClasses: true,
@@ -49,9 +49,13 @@
             let deltaX = e.clientX - mouseDownX;
             let deltaY = e.clientY - mouseDownY;
             updateInterface(currentSelectbox, deltaX, deltaY, currentSelectbox);
-            target.classList.remove("cb-resizing");
+            target.classList.remove("sb-resizing");
             target = null;
+            let el = currentSelectbox.element;
             currentSelectbox = null;
+            el.dispatchEvent(new CustomEvent("selectboxui:resize-end", {
+                detail: el.selectBoxUI
+            }));
         }
     }
     function onMouseMove(e) {
@@ -62,6 +66,10 @@
             let deltaX = e.clientX - mouseDownX;
             let deltaY = e.clientY - mouseDownY;
             updateInterface(currentSelectbox, deltaX, deltaY);
+            let el = currentSelectbox.element;
+            el.dispatchEvent(new CustomEvent("selectboxui:resize", {
+                detail: el.selectBoxUI
+            }));
         }
     }
     function updateInterface(selectBoxUI, deltaX = 0, deltaY = 0, updateBox = null) {
@@ -186,6 +194,12 @@
             updateBox.focus.style.width = `${updateBox.right - updateBox.left}px`;
             updateBox.focus.style.height = `${updateBox.bottom - updateBox.top}px`;
         }
+        let el = updateBox.element;
+        if (el !== undefined) {
+            el.dispatchEvent(new CustomEvent("selectboxui:changed", {
+                detail: el.selectBoxUI
+            }));
+        }
     }
     function correctSelectBoxUISizes(selectBoxUI, left = null, top = null, right = null, bottom = null) {
         if (left === null) {
@@ -286,12 +300,15 @@
         el.selectBoxUI.wrapper.style.width = `${width}px`;
         el.selectBoxUI.wrapper.style.height = `${height}px`;
         el.selectBoxUI.updateInterface();
+        el.dispatchEvent(new CustomEvent("selectboxui:element-resized", {
+            detail: el.selectBoxUI
+        }));
     }
     function selectBoxUI(el, userOptions = {}) {
         let elOptions = {};
         if (el.dataset.selectboxuiWrapperClass !== undefined) {
             let classes = el.dataset.selectboxuiWrapperClass.split(" ");
-            classes.push("cb-selectbox-wrapper");
+            classes.push(defaultOptions.wrapperClass);
             elOptions.wrapperClass = classes.join(" ");
         }
         if (el.dataset.selectboxuiWrapperId !== undefined) {
@@ -337,7 +354,7 @@
         if (el.dataset.selectboxuiNoResizeObserver !== undefined) {
             options.resizeObserver = el.dataset.selectboxuiNoResizeObserver.toLowerCase() !== "false";
         }
-        let options = Object.assign({}, defaultOptions, elOptions, userOptions);
+        let options = Object.assign({}, defaultOptions, window.selectBoxUI.defaults, elOptions, userOptions);
         if (el.tagName.toLowerCase() !== "img") {
             prepareSelectbox(el, options);
         } else {
@@ -356,13 +373,16 @@
             function onMouseDown(e) {
                 if (e.which === 1) {
                     target = e.target;
-                    target.classList.add("cb-resizing");
+                    target.classList.add("sb-resizing");
                     currentSelectbox = el.selectBoxUI;
                     mouseDownX = e.clientX;
                     mouseDownY = e.clientY;
                     e.preventDefault();
                     e.stopPropagation();
                     e.stopImmediatePropagation();
+                    el.dispatchEvent(new CustomEvent("selectboxui:resize-start", {
+                        detail: el.selectBoxUI
+                    }));
                 }
             }
             function createElement(tagName, classNames, parent = null, onmousedown = onMouseDown) {
@@ -410,7 +430,7 @@
             el.style.zIndex = "0";
             let focusSection = null;
             if (options.addFocus) {
-                focusSection = createElement("div", "cb-element cb-focus", wrapper);
+                focusSection = createElement("div", "sb-element sb-focus", wrapper);
                 focusSection.addEventListener("dblclick", function(e) {
                     el.selectBoxUI.updateInterface(0, 0, el.selectBoxUI.height, el.selectBoxUI.width);
                     e.preventDefault();
@@ -418,10 +438,10 @@
             }
             let cornerTopLeft = null, cornerBottomLeft = null, cornerTopRight = null, cornerBottomRight = null;
             if (options.addCorners) {
-                cornerTopLeft = createElement("div", "cb-element cb-corner cb-corner-topleft", wrapper);
-                cornerBottomLeft = createElement("div", "cb-element cb-corner cb-corner-bottomleft", wrapper);
-                cornerTopRight = createElement("div", "cb-element cb-corner cb-corner-topright", wrapper);
-                cornerBottomRight = createElement("div", "cb-element cb-corner cb-corner-bottomright", wrapper);
+                cornerTopLeft = createElement("div", "sb-element sb-corner sb-corner-topleft", wrapper);
+                cornerBottomLeft = createElement("div", "sb-element sb-corner sb-corner-bottomleft", wrapper);
+                cornerTopRight = createElement("div", "sb-element sb-corner sb-corner-topright", wrapper);
+                cornerBottomRight = createElement("div", "sb-element sb-corner sb-corner-bottomright", wrapper);
                 cornerTopLeft.addEventListener("dblclick", function(e) {
                     el.selectBoxUI.updateInterface(0, 0, null, null);
                     e.preventDefault();
@@ -441,10 +461,10 @@
             }
             let borderLeft = null, borderRight = null, borderTop = null, borderBottom = null;
             if (options.addBorders) {
-                borderLeft = createElement("div", "cb-element cb-border cb-border-left", wrapper);
-                borderRight = createElement("div", "cb-element cb-border cb-border-right", wrapper);
-                borderTop = createElement("div", "cb-element cb-border cb-border-top", wrapper);
-                borderBottom = createElement("div", "cb-element cb-border cb-border-bottom", wrapper);
+                borderLeft = createElement("div", "sb-element sb-border sb-border-left", wrapper);
+                borderRight = createElement("div", "sb-element sb-border sb-border-right", wrapper);
+                borderTop = createElement("div", "sb-element sb-border sb-border-top", wrapper);
+                borderBottom = createElement("div", "sb-element sb-border sb-border-bottom", wrapper);
                 borderLeft.addEventListener("dblclick", function(e) {
                     el.selectBoxUI.updateInterface(null, 0, null, null);
                     e.preventDefault();
@@ -464,10 +484,10 @@
             }
             let leftSide = null, rightSide = null, topSide = null, bottomSide = null;
             if (options.addSides) {
-                leftSide = createElement("div", "cb-element cb-side-box cb-side-box-left", wrapper, null);
-                rightSide = createElement("div", "cb-element cb-side-box cb-side-box-right", wrapper, null);
-                topSide = createElement("div", "cb-element cb-side-box cb-side-box-top", wrapper, null);
-                bottomSide = createElement("div", "cb-element cb-side-box cb-side-box-bottom", wrapper, null);
+                leftSide = createElement("div", "sb-element sb-side-box sb-side-box-left", wrapper, null);
+                rightSide = createElement("div", "sb-element sb-side-box sb-side-box-right", wrapper, null);
+                topSide = createElement("div", "sb-element sb-side-box sb-side-box-top", wrapper, null);
+                bottomSide = createElement("div", "sb-element sb-side-box sb-side-box-bottom", wrapper, null);
             }
             el.selectBoxUI = {
                 left: 0,
@@ -497,6 +517,7 @@
                 },
                 focus: focusSection,
                 wrapper: wrapper,
+                element: el,
                 observer: new ResizeObserver(entries => {
                     entries.forEach(entry => resizeSelectBox(entry));
                 }),
@@ -524,28 +545,40 @@
                     updateInterface(el.selectBoxUI);
                 },
                 disable: function() {
-                    let els = el.selectBoxUI.wrapper.querySelectorAll(".cb-element");
+                    let els = el.selectBoxUI.wrapper.querySelectorAll(".sb-element");
                     els.forEach(el => {
-                        el.classList.add("cb-ignore-mouse");
+                        el.classList.add("sb-ignore-mouse");
                     });
+                    el.dispatchEvent(new CustomEvent("selectboxui:disable", {
+                        detail: el.selectBoxUI
+                    }));
                 },
                 enable: function() {
-                    let els = el.selectBoxUI.wrapper.querySelectorAll(".cb-element");
+                    let els = el.selectBoxUI.wrapper.querySelectorAll(".sb-element");
                     els.forEach(el => {
-                        el.classList.remove("cb-ignore-mouse");
+                        el.classList.remove("sb-ignore-mouse");
                     });
+                    el.dispatchEvent(new CustomEvent("selectboxui:enable", {
+                        detail: el.selectBoxUI
+                    }));
                 },
                 show: function() {
-                    let els = el.selectBoxUI.wrapper.querySelectorAll(".cb-element");
+                    let els = el.selectBoxUI.wrapper.querySelectorAll(".sb-element");
                     els.forEach(el => {
-                        el.classList.remove("cb-hidden");
+                        el.classList.remove("sb-hidden");
                     });
+                    el.dispatchEvent(new CustomEvent("selectboxui:show", {
+                        detail: el.selectBoxUI
+                    }));
                 },
                 hide: function() {
-                    let els = el.selectBoxUI.wrapper.querySelectorAll(".cb-element");
+                    let els = el.selectBoxUI.wrapper.querySelectorAll(".sb-element");
                     els.forEach(el => {
-                        el.classList.add("cb-hidden");
+                        el.classList.add("sb-hidden");
                     });
+                    el.dispatchEvent(new CustomEvent("selectboxui:hide", {
+                        detail: el.selectBoxUI
+                    }));
                 },
                 get: function() {
                     return {
@@ -561,6 +594,18 @@
                     setBoxFromString(el.selectBoxUI, boxString);
                     correctSelectBoxUISizes(el.selectBoxUI);
                     updateInterface(el.selectBoxUI);
+                },
+                bounce: function() {
+                    el.selectBoxUI.wrapper.classList.add("sb-bounce");
+                    el.dispatchEvent(new CustomEvent("selectboxui:bounce-start", {
+                        detail: el.selectBoxUI
+                    }));
+                    setTimeout(() => {
+                        el.selectBoxUI.wrapper.classList.remove("sb-bounce");
+                        el.dispatchEvent(new CustomEvent("selectboxui:bounce-end", {
+                            detail: el.selectBoxUI
+                        }));
+                    }, 2100);
                 }
             };
             if (options.initialBox !== null) {
@@ -579,6 +624,8 @@
         }
     }
     window.selectBoxUI = selectBoxUI;
+    window.selectBoxUI.defaults = Object.assign({}, defaultOptions);
+    window.selectBoxUI.version = "1.1.0";
     window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("mousemove", onMouseMove);
     if (document.addEventListener) {
@@ -626,6 +673,10 @@
                             return;
                         }
                         this.selectBoxUI.set(parameters[0]);
+                        break;
+
+                      case "bounce":
+                        this.selectBoxUI.bounce();
                         break;
 
                       default:

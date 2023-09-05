@@ -125,7 +125,7 @@ If any of the values is negative, it will be interpreted as the size from the bo
 When creating a SelectBoxUI, you can pass a set of options to customize the effect. The options can be passed as an object to the `selectBoxUI` function or as `data-selectboxuiui-*` attributes to the element. The following options are available:
 
 - `initialBox`: Initial size of the selection box. If not specified, the initial box size will cover all the space.
-- `wrapperClass`: Class to add to the wrapper of the selection box. If not specified, the default value is `cb-selectbox-wrapper`.
+- `wrapperClass`: Class to add to the wrapper of the selection box. If not specified, the default value is `sb-selectbox-wrapper`.
 - `wrapperId`: Id to add to the wrapper of the selection box. If not specified, the default value is `null` (means that it will not add set id).
 - `addFocus`: Whether to add an active _focus section_ to the element when the selection box. The active _focus section_ means that it can be moved in the selection box, and the user interaction will not reach to the underlying elements. If not specified, the default value is `true`.
 - `addBorders`: Whether to add _active borders_ that enable to adjust the selection box. If not specified, the default value is `true`.
@@ -150,27 +150,82 @@ In the declarative version, the options can be passed as `data-selectboxuiui-*`:
 - `data-selectboxuiui-no-resize-observer`: Sets the value of `resizeObserver` to `false`.
 - `data-selectboxuiui-no-modify-sizes`: Sets the value of `modifySizes` to `false`.
 
-## Customizing the Style
+### Default options
 
-There are different CSS classes that you can use to customize the style of the selection box. The following classes are available:
+The default options can be changed by modifying the `selectBoxUI.defaults` object. For example, to change the default initial box to `10%`, you can use the following code, which will change the default for all the elements that have the effect:
 
-- `cb-element`: Class for any object that is part from the selection box.
-- `cb-selectbox-wrapper`: Class for the wrapper of the selection box.
-- `cb-border`: Class of the borders of the selection box.
-- `cb-border-top`, `cb-border-right`, `cb-border-bottom`, `cb-border-left`: Classes for each of the borders of the selection box.
-- `cb-corner`: Class of the corners of the selection box.
-- `cb-corner-topleft`, `cb-corner-topright`, `cb-corner-bottomright`, `cb-corner-bottomleft`: Classes for each of the corners of the selection box.
-- `cb-side`: Class of the sides of the selection box.
-- `cb-side-top`, `cb-side-right`, `cb-side-bottom`, `cb-side-left`: Classes for each of the sides of the selection box.
-- `cb-focus`: Class of the focus section of the selection box.
-- `cb-resizing`: Class of the selection box element when it is being used to resize the selection box. i.e. if the user is using the left border to resize the selection box, the `cb-resizing` class will be added to the left border and only to the left border.
+```javascript
+showsource.defaults.initialBox = "10%";
+```
+
+Additionally, it is possible to set multiple default values at once, by setting `showsource.defaults` to an options object. For example, to disable the focus and the corners by default, you can use the following code:
+
+```javascript
+showsource.defaults = {
+    addFocus: false,
+    addCorners: false
+};
+```
+
+## Styles
+
+The library adds a set of styles to the elements that build the selection box. The styles are added to the element itself and to the wrapper of the selection box. The following styles are added to the elements:
+
+- `sb-element`: Class for any object that is part from the selection box.
+- `sb-selectbox-wrapper`: Class for the wrapper of the selection box.
+- `sb-border`: Class of the borders of the selection box.
+- `sb-border-top`, `sb-border-right`, `sb-border-bottom`, `sb-border-left`: Classes for each of the borders of the selection box.
+- `sb-corner`: Class of the corners of the selection box.
+- `sb-corner-topleft`, `sb-corner-topright`, `sb-corner-bottomright`, `sb-corner-bottomleft`: Classes for each of the corners of the selection box.
+- `sb-side`: Class of the sides of the selection box.
+- `sb-side-top`, `sb-side-right`, `sb-side-bottom`, `sb-side-left`: Classes for each of the sides of the selection box.
+- `sb-focus`: Class of the focus section of the selection box.
+- `sb-resizing`: Class of the selection box element when it is being used to resize the selection box. i.e. if the user is using the left border to resize the selection box, the `sb-resizing` class will be added to the left border and only to the left border.
+
+### Additional styles
+
+The library also adds some additional styles that add some effects to the selection box. The following styles are added to the elements:
+
+- `sb-bounce`: Is a class that makes that the borders of the selection box bounce for 2 seconds. It is designed to be used to show the user that there is a selection box. (This should be added to the wrapper element or the container of the selection box).
+- `sb-borders-fixed`: Is a class that makes that the guides of the borders of the selection box are shown. If this class is not added, the guides will be hidden while they are not being used to resize the selection box. (This should be added to the wrapper element or the container of the selection box).
+- `sb-ignore-mouse`: Is a class that makes that the mouse events are ignored by the element. This class is added when a selection box is disabled. This can be added to any element that you want to ignore the mouse events.
+- `sb-hidden`: Is a class that makes that the element is hidden. This class is added when a selection box is hidden. This can be added to any element that you want to hide.
+
+### Customizing the Styles
 
 The default style is defined in the `selectbox-ui.css` file, but you can override it by defining your own style sheet. The next example will add a dark-red background to the selection box:
 
 ```css
-.cb-side-box {
+.sb-side-box {
     background-color: #633;
 }
+```
+
+## Events
+
+The library triggers some events that can be used to control the effect. The events are triggered in the element that has the effect. The following events are available:
+
+- `selectboxui-changed`: Is triggered when the selection box is changed either by the interaction of the user or by using the API.
+- `selectboxui-resize-start`: Is triggered when the box starts to be resized because of the interaction of the user (i.e. using a side, corner, etc.).
+- `selectboxui-resize`: Is triggered when the box is being resized because of the interaction of the user (i.e. using a side, corner, etc.).
+- `selectboxui-resize-end`: Is triggered when the box ends to be resized because of the interaction of the user (i.e. using a side, corner, etc.).
+- `selectboxui-bounce-start`: Is triggered when the bounce effect starts.
+- `selectboxui-bounce-end`: Is triggered when the bounce effect ends.
+- `selectboxui-show`: Is triggered when the selection box is shown.
+- `selectboxui-hide`: Is triggered when the selection box is hidden.
+- `selectboxui-enable`: Is triggered when the selection box is enabled.
+- `selectboxui-disable`: Is triggered when the selection box is disabled.
+- `selectboxui-element-resized`:  Is triggered when it is detected that the element that has the effect has been resized, and the selection box has been adapted to the new size.
+
+Each of the events has a `detail` property which is the `selectionBoxUI` object.
+
+The events can be listened using the `addEventListener` function. E.g.:
+
+```javascript
+var element = document.querySelector("div");
+element.addEventListener("selectboxui-changed", function(event) {
+    console.log("Selection box changed");
+});
 ```
 
 ## Examples

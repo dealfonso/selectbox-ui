@@ -22,53 +22,53 @@
     SOFTWARE.
 */
 
-.cb-element .cb-ignore-mouse {
+.sb-element .sb-ignore-mouse {
   pointer-events: none!important
 }
-.cb-element .cb-ignore-mouse * {
+.sb-element .sb-ignore-mouse * {
   pointer-events: auto!important
 }
-.cb-hidden {
+.sb-hidden {
   display: none
 }
-.cb-selectbox-wrapper {
+.sb-selectboxui-wrapper {
   overflow: hidden
 }
-.cb-borders-fixed .cb-border {
+.sb-borders-fixed .sb-border {
   border-color: #fff!important
 }
-.cb-border {
+.sb-border {
   position: absolute;
   opacity: 1;
   z-index: 2;
   border: 0;
   border-color: transparent
 }
-.cb-border-bottom,
-.cb-border-top {
+.sb-border-bottom,
+.sb-border-top {
   cursor: ns-resize;
   border-width: 0;
   border-style: solid
 }
-.cb-border-top {
+.sb-border-top {
   border-top-width: 1px
 }
-.cb-border-bottom {
+.sb-border-bottom {
   border-bottom-width: 1px
 }
-.cb-border-left,
-.cb-border-right {
+.sb-border-left,
+.sb-border-right {
   border-width: 0;
   border-style: solid;
   cursor: ew-resize
 }
-.cb-border-right {
+.sb-border-right {
   border-right-width: 1px
 }
-.cb-border-left {
+.sb-border-left {
   border-left-width: 1px
 }
-.cb-side-box {
+.sb-side-box {
   position: absolute;
   top: 0;
   left: 0;
@@ -76,43 +76,114 @@
   background-color: #333;
   z-index: 1
 }
-.cb-corner {
+.sb-corner {
   position: absolute;
   opacity: 1;
   z-index: 3
 }
-.cb-corner-topleft {
+.sb-corner-topleft {
   cursor: nwse-resize
 }
-.cb-corner-bottomleft {
+.sb-corner-bottomleft {
   cursor: nesw-resize
 }
-.cb-corner-topright {
+.sb-corner-topright {
   cursor: nesw-resize
 }
-.cb-corner-bottomright {
+.sb-corner-bottomright {
   cursor: nwse-resize
 }
-.cb-focus {
+.sb-focus {
   position: absolute;
   opacity: 1;
   z-index: 1;
   border: 1px solid #fff;
   cursor: move
 }
-.cb-border.cb-resizing {
+.sb-border.sb-resizing {
   border-color: #fff!important
 }
-.cb-corner-bottomleft.cb-resizing ~ .cb-border-bottom,
-.cb-corner-bottomleft.cb-resizing ~ .cb-border-left,
-.cb-corner-bottomright.cb-resizing ~ .cb-border-bottom,
-.cb-corner-bottomright.cb-resizing ~ .cb-border-right,
-.cb-corner-topleft.cb-resizing ~ .cb-border-left,
-.cb-corner-topleft.cb-resizing ~ .cb-border-top,
-.cb-corner-topright.cb-resizing ~ .cb-border-right,
-.cb-corner-topright.cb-resizing ~ .cb-border-top {
+.sb-corner-bottomleft.sb-resizing ~ .sb-border-bottom,
+.sb-corner-bottomleft.sb-resizing ~ .sb-border-left,
+.sb-corner-bottomright.sb-resizing ~ .sb-border-bottom,
+.sb-corner-bottomright.sb-resizing ~ .sb-border-right,
+.sb-corner-topleft.sb-resizing ~ .sb-border-left,
+.sb-corner-topleft.sb-resizing ~ .sb-border-top,
+.sb-corner-topright.sb-resizing ~ .sb-border-right,
+.sb-corner-topright.sb-resizing ~ .sb-border-top {
   border-color: #fff
 }
-.cb-focus.cb-resizing ~ .cb-border {
+.sb-focus.sb-resizing ~ .sb-border {
   border-color: #fff
+}
+.sb-bounce .sb-border {
+  border-color: #fff
+}
+.sb-bounce .sb-border-left {
+  animation: sb-bounce-left 2s infinite;
+  -webkit-animation: sb-bounce-left 2s normal forwards
+}
+@keyframes sb-bounce-left {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    transform: translateX(0)
+  }
+  40%,
+  60% {
+    transform: translateX(10px)
+  }
+}
+.sb-bounce .sb-border-right {
+  animation: sb-bounce-right 2s infinite;
+  -webkit-animation: sb-bounce-right 2s normal forwards
+}
+@keyframes sb-bounce-right {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    transform: translateX(0)
+  }
+  40%,
+  60% {
+    transform: translateX(-10px)
+  }
+}
+.sb-bounce .sb-border-top {
+  animation: sb-bounce-top 2s infinite;
+  -webkit-animation: sb-bounce-top 2s normal forwards
+}
+@keyframes sb-bounce-top {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    transform: translateY(0)
+  }
+  40%,
+  60% {
+    transform: translateY(10px)
+  }
+}
+.sb-bounce .sb-border-bottom {
+  animation: sb-bounce-bottom 2s infinite;
+  -webkit-animation: sb-bounce-bottom 2s normal forwards
+}
+@keyframes sb-bounce-bottom {
+  0%,
+  100%,
+  20%,
+  50%,
+  80% {
+    transform: translateY(0)
+  }
+  40%,
+  60% {
+    transform: translateY(-10px)
+  }
 }

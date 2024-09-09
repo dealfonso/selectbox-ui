@@ -352,7 +352,8 @@
             elOptions.modifySizes = el.dataset.selectboxuiNoModifySizes.toLowerCase() !== "false";
         }
         if (el.dataset.selectboxuiNoResizeObserver !== undefined) {
-            elOptions.resizeObserver = el.dataset.selectboxuiNoResizeObserver.toLowerCase() !== "false";
+            elOptions.resizeObserver = el.dataset.selectboxuiNoResizeObserver.toLowerCase() === "false";
+            console.log(elOptions.resizeObserver, el.dataset.selectboxuiNoResizeObserver);
         }
         let options = Object.assign({}, defaultOptions, window.selectBoxUI.defaults, elOptions, userOptions);
         if (el.tagName.toLowerCase() !== "img") {

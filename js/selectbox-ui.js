@@ -455,7 +455,8 @@ function selectBoxUI(el, userOptions = {}) {
     }
 
     if (el.dataset.selectboxuiNoResizeObserver !== undefined) {
-        elOptions.resizeObserver = el.dataset.selectboxuiNoResizeObserver.toLowerCase() !== "false";
+        elOptions.resizeObserver = el.dataset.selectboxuiNoResizeObserver.toLowerCase() === "false";
+        console.log(elOptions.resizeObserver, el.dataset.selectboxuiNoResizeObserver);
     }
         
     // Merge the default options with the option from the element and the user options
